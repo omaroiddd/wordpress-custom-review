@@ -295,3 +295,7 @@ In `functions.php` inside `my_custom_comment_form()`:
 - WordPress hooks: `comment_post`, `wp_enqueue_scripts`
 - WordPress filters: `comment_form_fields`, `comments_template`
 - Blocksy Child Theme
+
+
+
+<img width="367" height="526" style="border-radius: 5px;" alt="customcomments" src="https://github.com/user-attachments/assets/fab4e30a-b1eb-4424-ae13-3c6cd2ce04a3" />
