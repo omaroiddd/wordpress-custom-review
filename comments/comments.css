@@ -1,0 +1,615 @@
+/* =============================================================
+   CUSTOM REVIEW SYSTEM — Zeroone Light
+   ============================================================= */
+
+@import url("https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap");
+
+/* ─── CSS Variables ─────────────────────────────────────── */
+:root {
+  --bg-page: #f4f4f4;
+  --bg-card: #ffffff;
+  --bg-input: #f9f9f9;
+  --border: rgba(232, 25, 26, 0.14);
+  --border-hover: rgba(232, 25, 26, 0.45);
+  --red: #e8191a;
+  --red-light: #ff3d3e;
+  --red-dim: rgba(232, 25, 26, 0.07);
+  --black: #111111;
+  --text-primary: #1a1a1a;
+  --text-muted: #888888;
+  --text-dim: #bbbbbb;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --shadow-sm: 0 2px 12px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 24px rgba(0, 0, 0, 0.09);
+}
+
+/* ─── Base Font ─────────────────────────────────────────── */
+.review-form-wrapper,
+.review-list {
+  font-family: "Cairo", sans-serif;
+}
+
+/* ═════════════════════════════════════════════════════════
+   COMMENT CARDS
+═════════════════════════════════════════════════════════ */
+
+.review-list {
+  list-style: none;
+  padding: 0;
+  margin: 48px 0 56px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.review-item {
+  padding: 0;
+  margin: 0;
+}
+
+/* The Card */
+.review-card {
+  background: var(--bg-card);
+  border: 1px solid rgba(0, 0, 0, 0.07);
+  border-radius: var(--radius-lg);
+  padding: 28px 32px;
+  direction: rtl;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition:
+    border-color var(--transition),
+    box-shadow var(--transition),
+    transform var(--transition);
+}
+
+/* Red accent line on right (RTL) */
+.review-card::before {
+  content: "";
+  position: absolute;
+  top: 20%;
+  right: 0;
+  width: 3px;
+  height: 60%;
+  background: linear-gradient(to bottom, transparent, var(--red), transparent);
+  opacity: 0;
+  transition: opacity var(--transition);
+  border-radius: 2px;
+}
+
+.review-card:hover {
+  border-color: var(--border-hover);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.review-card:hover::before {
+  opacity: 1;
+}
+
+/* ── Card Header ── */
+.review-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.review-card__author {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Avatar */
+.review-card__author img {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--border);
+}
+
+.review-card__author strong {
+  display: block;
+  font-family: "Cairo", sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+
+.review-branch {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 2px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--red);
+  letter-spacing: 0.04em;
+}
+
+/* Stars */
+.review-stars {
+  font-size: 1rem;
+  letter-spacing: 2px;
+  color: var(--red);
+  filter: drop-shadow(0 0 4px rgba(232, 25, 26, 0.3));
+  line-height: 1;
+}
+
+/* ── Comment Text ── */
+.review-card__body {
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: #444444;
+  line-height: 1.9;
+  margin-bottom: 16px;
+}
+
+.review-card__body p {
+  margin: 0;
+}
+
+/* ── Photo ── */
+.review-card__photo {
+  margin-top: 14px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.07);
+}
+
+.review-card__photo img {
+  width: 100%;
+  max-height: 260px;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s ease;
+}
+
+.review-card__photo:hover img {
+  transform: scale(1.02);
+}
+
+/* ── Footer / Date ── */
+.review-card__footer {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+/* ── Empty State ── */
+.no-reviews {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-muted);
+  font-family: "Cairo", sans-serif;
+  font-size: 1rem;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--red-dim);
+}
+
+/* ═════════════════════════════════════════════════════════
+   REVIEW FORM
+═════════════════════════════════════════════════════════ */
+
+.review-form-wrapper {
+  direction: rtl;
+  margin-top: 60px;
+  position: relative;
+}
+
+/* Decorative eyebrow */
+.review-form-wrapper::before {
+  content: "— تقييمك يهمنا —";
+  display: block;
+  text-align: center;
+  font-family: "Cairo", sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  color: var(--red);
+  margin-bottom: 16px;
+  opacity: 0.6;
+}
+
+/* Form Title */
+.review-form__title {
+  font-family: "Cairo", sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--black);
+  text-align: center;
+  margin: 0 0 36px;
+  line-height: 1.2;
+}
+
+/* The Form */
+.review-form {
+  background: var(--bg-card);
+  border: 1px solid rgba(0, 0, 0, 0.07);
+  border-radius: var(--radius-lg);
+  padding: 40px 44px 44px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Top red accent bar */
+.review-form::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(to left, transparent, var(--red), transparent);
+  opacity: 0.6;
+}
+
+/* ── Form Group ── */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  position: relative;
+}
+
+.form-group--full {
+  grid-column: 1 / -1;
+}
+
+/* ── Labels ── */
+.form-group label {
+  font-family: "Cairo", sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  transition: color var(--transition);
+}
+
+.form-group:focus-within label {
+  color: var(--red);
+}
+
+.required {
+  color: var(--red);
+  opacity: 0.8;
+}
+
+/* ── Inputs, Selects, Textarea ── */
+input[type="text"],
+input[type="tel"],
+input[type="email"],
+select,
+textarea {
+  width: 100% !important;
+  background: var(--bg-input) !important;
+  border: 1.5px solid #ebebeb !important;
+  border-radius: var(--radius-sm) !important;
+  font-family: "Cairo", sans-serif !important;
+  font-size: 0.9rem !important;
+  font-weight: 400 !important;
+  color: var(--text-primary) !important;
+  direction: rtl !important;
+  transition:
+    border-color var(--transition),
+    background var(--transition),
+    box-shadow var(--transition) !important;
+  box-sizing: border-box !important;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-dim);
+  font-weight: 300;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--red);
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(232, 25, 26, 0.08);
+}
+
+/* Select custom arrow */
+select {
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23e8191a' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: left 14px center;
+  padding-left: 36px;
+}
+
+select option {
+  background: #ffffff;
+  color: var(--text-primary);
+}
+
+textarea {
+  resize: vertical;
+  min-height: 110px;
+  line-height: 1.8;
+}
+
+/* ── Char Counter ── */
+.char-count {
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  color: var(--text-dim);
+  text-align: left;
+  margin-top: -4px;
+}
+
+/* ── Star Rating ── */
+.stars-wrapper {
+  display: flex;
+  flex-direction: row-reverse;
+  gap: 4px;
+  padding: 4px 0;
+  justify-content: flex-end;
+}
+
+.stars-wrapper input[type="radio"] {
+  display: none;
+}
+
+.stars-wrapper label {
+  font-size: 1.8rem;
+  color: #dddddd;
+  cursor: pointer;
+  transition:
+    color 0.15s ease,
+    transform 0.15s ease,
+    filter 0.15s ease;
+  text-transform: none;
+  letter-spacing: 0;
+  line-height: 1;
+}
+
+.stars-wrapper label:hover,
+.stars-wrapper label:hover ~ label,
+.stars-wrapper input:checked ~ label {
+  color: var(--red);
+  filter: drop-shadow(0 0 6px rgba(232, 25, 26, 0.4));
+}
+
+.stars-wrapper label:hover {
+  transform: scale(1.2);
+}
+
+.rating-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--red);
+  opacity: 0.65;
+  margin-top: 2px;
+  min-height: 14px;
+}
+
+/* ── Photo Upload ── */
+.photo-upload-wrapper {
+  position: relative;
+}
+
+.photo-upload-wrapper input[type="file"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: none;
+  background: none;
+}
+
+.photo-upload-ui {
+  border: 1.5px dashed rgba(232, 25, 26, 0.25);
+  border-radius: var(--radius-md);
+  padding: 24px 20px;
+  text-align: center;
+  background: var(--red-dim);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  transition:
+    border-color var(--transition),
+    background var(--transition);
+  cursor: pointer;
+}
+
+.photo-upload-ui:hover {
+  border-color: var(--red);
+  background: rgba(232, 25, 26, 0.05);
+}
+
+.upload-icon {
+  font-size: 1.5rem;
+  line-height: 1;
+  opacity: 0.5;
+}
+
+.upload-text {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.03em;
+}
+
+.upload-hint {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+}
+
+/* Photo preview */
+.photo-preview {
+  position: relative;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.photo-preview img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  display: block;
+}
+
+.remove-photo {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: rgba(0, 0, 0, 0.55);
+  color: #ffffff;
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0.75rem;
+  transition: background var(--transition);
+  padding: 0;
+}
+
+.remove-photo:hover {
+  background: var(--red);
+}
+
+/* ── Submit Button ── */
+.form-submit-wrapper {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 8px;
+}
+
+.btn-submit {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 10px;
+  padding: 13px 36px !important;
+  background: transparent !important;
+  border: 1.5px solid var(--red) !important;
+  border-radius: 4px !important;
+  font-family: "Cairo", sans-serif !important;
+  font-size: 0.8rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.14em !important;
+  text-transform: uppercase !important;
+  color: var(--red) !important;
+  cursor: pointer !important;
+  position: relative !important;
+  overflow: hidden !important;
+  transition:
+    color var(--transition),
+    box-shadow var(--transition) !important;
+}
+
+/* Fill sweep animation */
+.btn-submit::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--red);
+  transform: translateX(101%);
+  transition: transform 0.38s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 0;
+}
+
+.btn-submit:hover::before {
+  transform: translateX(0);
+}
+
+.btn-submit:hover {
+  color: #ffffff;
+  box-shadow: 0 4px 20px rgba(232, 25, 26, 0.25);
+}
+
+.btn-submit span,
+.btn-submit .btn-arrow {
+  position: relative;
+  z-index: 1;
+}
+
+.btn-arrow {
+  font-size: 1rem;
+  transition: transform var(--transition);
+}
+
+.btn-submit:hover .btn-arrow {
+  transform: translateX(-4px);
+}
+
+/* ── Logged in notice ── */
+.review-form .logged-in-as,
+#commentform .logged-in-as {
+  grid-column: 1 / -1;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  padding: 10px 14px;
+  background: #f9f9f9;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.review-form .logged-in-as a,
+#commentform .logged-in-as a {
+  color: var(--red);
+  text-decoration: none;
+}
+
+/* ═════════════════════════════════════════════════════════
+   RESPONSIVE
+═════════════════════════════════════════════════════════ */
+
+@media (max-width: 640px) {
+  .review-form {
+    grid-template-columns: 1fr;
+    padding: 28px 22px 32px;
+  }
+
+  .review-form__title {
+    font-size: 1.6rem;
+  }
+
+  .review-card {
+    padding: 20px 18px;
+  }
+
+  .review-card__header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .btn-submit {
+    width: 100%;
+    justify-content: center;
+  }
+}
